@@ -2,7 +2,6 @@ const { App } = require("@slack/bolt");
 const fs = require('fs');
 const axios = require("axios");
 const dotenv = require("dotenv");
-const questMsg = require('./messages/questMsg.js')
 
 dotenv.config();
 
