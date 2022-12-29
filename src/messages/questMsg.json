@@ -1,14 +1,6 @@
 {
 	"blocks": [
 		{
-			"type": "header",
-			"text": {
-				"type": "plain_text",
-				"text": "クエスト一覧",
-				"emoji": true
-			}
-		},
-		{
 			"type": "divider"
 		},
 		{
