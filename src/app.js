@@ -7,7 +7,9 @@ dotenv.config();
 
 // 起動した時にトークンを取得して使い回すためにインスタンスのガワを作成
 let axiosInstance;
-const jsonObject = JSON.parse(fs.readFileSync('./src/messages/questMsg.json', 'utf8'));
+let questMsg = JSON.parse(fs.readFileSync('./src/messages/questMsg.json', 'utf8'));
+const header = JSON.parse(fs.readFileSync('./src/messages/header.json', 'utf8'));
+
 const m2mHeaders = { "content-type": "application/json" };
 const body = {
   client_id: process.env.AUTH0_CLIENT_ID,
@@ -16,7 +18,6 @@ const body = {
   grant_type: "client_credentials",
 };
 
-console.log(jsonObject)
 const fetchToken = new Promise((resolve, reject) => {
   try {
     // Auth0側でM2Mトークンの発行回数は1000/monthまでなので開発中は、同じトークンを使い回す
@@ -53,14 +54,13 @@ app.command("/quest", async ({ command, ack, say }) => {
     await ack();
     const response = await axiosInstance.get("quest/");
     quests = response.data.quests
-    let blocks = []
+    await say(header)
     quests.map(async (quest) => {
-      blocks.push(questMsg.questBlock.block)
-      // quest情報を取得
-      // 置換して配列に入れる
+      questMsg.blocks[1].text.text = `*${quest.title}*\n*${quest.reward}* point`
+      questMsg.blocks[2].elements[0].text = quest.description
+      questMsg.blocks[3].accessory.value = String(quest.id)
+      await say(questMsg)
     })
-    console.log(blocks)
-    await say(jsonObject)
   } catch (error) {
     console.log("err");
     console.error(error);
@@ -68,8 +68,15 @@ app.command("/quest", async ({ command, ack, say }) => {
 });
 
 
-app.message('hello', async ({ message, say }) => {
-  console.log('hello')
+app.message( async ({ message, say }) => {
+  console.log(message)
+});
+
+
+app.action('report', async ({ ack,say, body, client, logger }) => {
+  await ack();
+  say(`<@${body.user.id}> \n*let's report!!*`)
+  console.log(body)
 });
 
 //起動時の処理/////////////////////////////////////////////////////
