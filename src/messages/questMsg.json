@@ -33,8 +33,8 @@
 					"text": "報告開始",
 					"emoji": true
 				},
-				"value": "click_me_123",
-				"action_id": "button-action"
+				"value": "button1",
+				"action_id": "report"
 			}
 		},
 		{

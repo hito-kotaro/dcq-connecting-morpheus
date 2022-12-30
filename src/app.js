@@ -58,6 +58,7 @@ app.command("/quest", async ({ command, ack, say }) => {
     quests.map(async (quest) => {
       questMsg.blocks[1].text.text = `*${quest.title}*\n*${quest.reward}* point`
       questMsg.blocks[2].elements[0].text = quest.description
+      questMsg.blocks[3].accessory.value = String(quest.id)
       await say(questMsg)
     })
   } catch (error) {
@@ -67,8 +68,15 @@ app.command("/quest", async ({ command, ack, say }) => {
 });
 
 
-app.message('hello', async ({ message, say }) => {
-  console.log('hello')
+app.message( async ({ message, say }) => {
+  console.log(message)
+});
+
+
+app.action('report', async ({ ack,say, body, client, logger }) => {
+  await ack();
+  say(`<@${body.user.id}> \n*let's report!!*`)
+  console.log(body)
 });
 
 //起動時の処理/////////////////////////////////////////////////////
